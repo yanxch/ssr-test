@@ -1,7 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import {CommitsView} from './components/commits.view';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: 'commits/:username',
+    component: CommitsView
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
