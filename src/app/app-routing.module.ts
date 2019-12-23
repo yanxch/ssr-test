@@ -4,6 +4,11 @@ import {CommitsView} from './components/commits.view';
 
 const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'commits/yanxch',
+    pathMatch: 'full'
+  },
+  {
     path: 'commits/:username',
     component: CommitsView
   }

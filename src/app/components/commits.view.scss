@@ -1,0 +1,18 @@
+.commit-avatar {
+  background-color: aquamarine;
+  align-self: normal;
+}
+
+commits {
+  display: block;
+  font-size: 0.7rem;
+}
+
+.text-centered {
+  text-align: center;
+}
+
+:host mat-card-content.preserve-whitespaces.mat-line {
+  white-space: pre;
+}
+

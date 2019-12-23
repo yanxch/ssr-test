@@ -1,48 +1,34 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {Subscription, Subject} from 'rxjs';
 import {CommitsService} from '../api/commits.service';
 import {Commit} from '../api/commit';
+import {map, exhaustMap, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'commits-view',
-  template: `
-    <h2>Commits View</h2>
-    <h2>{{username}}</h2>
-    <div *ngFor="let commit of commits">
-      {{commit.message}}
-    </div>
-  `,
+  templateUrl: './commits.view.html',
+  styleUrls: ['./commits.view.scss']
 })
 export class CommitsView implements OnInit, OnDestroy {
+
+  private onDestroy$ = new Subject();
 
   username: string;
   commits: Commit[];
 
-  private subscription: Subscription;
-
+  commits$ =    this.route.paramMap.pipe(
+    map(params => params.get('username')),
+    exhaustMap(username => this.commitsService.readCommitsByUsername(username)),
+    takeUntil(this.onDestroy$)
+  );
 
   constructor(private route: ActivatedRoute,
-              private commitsService: CommitsService) {
-    this.subscription = this.route.paramMap
-      .subscribe(paramMap => {
-        console.log('NEW Username', paramMap);
+              private commitsService: CommitsService) {}
 
-        this.username = paramMap.get('username');
-
-        this.commitsService.readCommitsByUsername(this.username)
-          .then((commits) => {
-            this.commits = commits;
-          });
-
-      });
-  }
-
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.onDestroy$.next();
   }
 }
